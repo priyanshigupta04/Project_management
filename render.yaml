@@ -33,3 +33,7 @@ services:
           type: web
           name: ether-ai-api
           property: url
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
