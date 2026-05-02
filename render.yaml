@@ -1,0 +1,35 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: ether-ai-api
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false # User must provide this in the dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        fromService:
+          type: static_site
+          name: ether-ai-frontend
+          property: url
+
+  # Frontend Static Site
+  - type: static_site
+    name: ether-ai-frontend
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: ether-ai-api
+          property: url
